@@ -2,8 +2,6 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from products.models import Product, ProductCategory, Basket
 
-
-
 def index(request):
     context = {
         'title': 'Store'
@@ -11,16 +9,10 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 def products(request, category_id=None):
-    if category_id:
-        category = ProductCategory.objects.get(id = category_id)
-        products = Product.objects.filter(category = category)
-    else:
-        products = Product.objects.all()
-        
     context = {
         'title': 'Store - Каталог',
         'categories': ProductCategory.objects.all(),
-        'products': products,
+        'products': Product.objects.filter(category_id = category_id) if category_id else Product.objects.all(),
     }
     return render(request, 'products/products.html', context)
 @login_required
